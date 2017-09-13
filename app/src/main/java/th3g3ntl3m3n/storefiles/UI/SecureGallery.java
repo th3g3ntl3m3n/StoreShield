@@ -314,6 +314,7 @@ public class SecureGallery extends Fragment {
             //            Bitmap myBitmap = BitmapFactory.decodeFile(outputPath + '/' + timeStamp);
             bitmatArray.add(new ImageData(outputPath + '/' + timeStamp, false));
         } catch (Exception e) {
+
             Log.e("tag", e.getMessage());
         }
 
