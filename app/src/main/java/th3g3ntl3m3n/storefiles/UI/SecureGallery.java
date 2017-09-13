@@ -6,8 +6,6 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,7 +17,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +24,6 @@ import android.view.ViewGroup;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -45,93 +41,11 @@ import th3g3ntl3m3n.storefiles.adapter.GalleryAdapter;
 
 public class SecureGallery extends Fragment {
 
-    Context context;
     private static final String TAG = SecureGallery.class.getSimpleName();
-    private boolean success = true;
+    Context context;
     RecyclerView.Adapter adapter;
     ArrayList<ImageData> bitmatArray;
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View view =  inflater.inflate(R.layout.gallery_screen, container,false);
-        bitmatArray = new ArrayList<>();
-        RecyclerView recyclerView = view.findViewById(R.id.galleryView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemViewCacheSize(20);
-        recyclerView.setDrawingCacheEnabled(true);
-        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        File fii = new File(Environment.getExternalStorageDirectory() + "/TollCulator");
-        if(fii.isDirectory()) {
-            File sdCardRoot = Environment.getExternalStorageDirectory();
-            File yourDir = new File(sdCardRoot, "TollCulator");
-            for (File f : yourDir.listFiles()) {
-                bitmatArray.add(new ImageData(f.getPath(), false));
-            }
-        }
-        adapter = new GalleryAdapter(bitmatArray, getActivity().getApplicationContext());
-        RecyclerView.LayoutManager layoutManager= new GridLayoutManager(getActivity(), 2);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(layoutManager);
-        view.findViewById(R.id.addImages).setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent.setType("image/*");
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
-
-            }
-        });
-        return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "onActivityResult: " + data.getClipData());
-            if(data.getClipData()!=null){
-                ClipData mClipData=data.getClipData();
-                ArrayList<Uri> mArrayUri=new ArrayList<Uri>();
-                for(int i=0;i<mClipData.getItemCount();i++){
-                    ClipData.Item item = mClipData.getItemAt(i);
-                    Uri uri = item.getUri();
-                    mArrayUri.add(uri);
-                    Log.d(TAG, "onActivityResult: " + getPath(context, uri));
-                    File folder = new File(Environment.getExternalStorageDirectory() +
-                            File.separator + "TollCulator");
-                    String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-
-                    if (!folder.exists()) {
-                        Log.d(TAG, "onClick: " + "created exists" + timeStamp);
-                        success = folder.mkdirs();
-                    }
-
-                    if (success) {
-                        Log.d(TAG, "onClick: " + "created folder " + timeStamp);
-                        copyFile(getPath(context, uri), folder.getPath(), timeStamp);
-                        // Do something on success
-                    } else {
-                        // Do something else on failure
-                        Log.d(TAG, "onClick: " + "olready created folder " + new Date().toString());
-                    }
-                }
-                Log.d(TAG, "onActivityResult: bitmatApp" + bitmatArray.size());
-                ((GalleryAdapter) adapter).updateDataSet(bitmatArray);
-                Log.v("LOG_TAG", "Selected Images"+ mArrayUri.size());
-            }
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.context = context;
-    }
+    private boolean success = true;
 
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access
@@ -243,7 +157,6 @@ public class SecureGallery extends Fragment {
         return null;
     }
 
-
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
@@ -274,6 +187,89 @@ public class SecureGallery extends Fragment {
      */
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.gallery_screen, container, false);
+        bitmatArray = new ArrayList<>();
+        RecyclerView recyclerView = view.findViewById(R.id.galleryView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        File fii = new File(Environment.getExternalStorageDirectory() + "/TollCulator");
+        if (fii.isDirectory()) {
+            File sdCardRoot = Environment.getExternalStorageDirectory();
+            File yourDir = new File(sdCardRoot, "TollCulator");
+            for (File f : yourDir.listFiles()) {
+                bitmatArray.add(new ImageData(f.getPath(), false));
+            }
+        }
+        adapter = new GalleryAdapter(bitmatArray, getActivity().getApplicationContext());
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
+        view.findViewById(R.id.addImages).setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+
+            }
+        });
+        return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "onActivityResult: " + data.getClipData());
+            if (data.getClipData() != null) {
+                ClipData mClipData = data.getClipData();
+                ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
+                for (int i = 0; i < mClipData.getItemCount(); i++) {
+                    ClipData.Item item = mClipData.getItemAt(i);
+                    Uri uri = item.getUri();
+                    mArrayUri.add(uri);
+                    Log.d(TAG, "onActivityResult: " + getPath(context, uri));
+                    File folder = new File(Environment.getExternalStorageDirectory() +
+                            File.separator + "TollCulator");
+                    String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+
+                    if (!folder.exists()) {
+                        Log.d(TAG, "onClick: " + "created exists" + timeStamp);
+                        success = folder.mkdirs();
+                    }
+
+                    if (success) {
+                        Log.d(TAG, "onClick: " + "created folder " + timeStamp);
+                        copyFile(getPath(context, uri), folder.getPath(), timeStamp);
+                        // Do something on success
+                    } else {
+                        // Do something else on failure
+                        Log.d(TAG, "onClick: " + "olready created folder " + new Date().toString());
+                    }
+                }
+                Log.d(TAG, "onActivityResult: bitmatApp" + bitmatArray.size());
+                ((GalleryAdapter) adapter).updateDataSet(bitmatArray);
+                Log.v("LOG_TAG", "Selected Images" + mArrayUri.size());
+            }
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 
     private void copyFile(String inputFilePath, String outputPath, String outputFile) {
@@ -310,8 +306,8 @@ public class SecureGallery extends Fragment {
 
             // delete the original file
             File fileToDelete = new File(inputFilePath);
-            boolean value = fileToDelete.delete();
-            Log.d(TAG, "copyFile: delete" + value);
+//            boolean value = fileToDelete.delete();
+//            Log.d(TAG, "copyFile: delete" + value);
             Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             scanIntent.setData(Uri.fromFile(fileToDelete));
             getActivity().sendBroadcast(scanIntent);
