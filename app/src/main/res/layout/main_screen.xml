@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_marginTop="20dp"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/save_a_password"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:padding="5dp"
+        android:textColor="@color/flatui_turquoise"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/passwordText"
+        android:layout_margin="50dp"
+        android:background="@drawable/round_edittext"
+        android:padding="10dp"
+        android:textColor="@color/flatui_midnight_blue"
+        android:layout_gravity="center"
+        android:inputType="numberPassword"
+        android:textSize="25sp"
+        android:hint="@string/secret"
+        android:textAlignment="center"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/savePassword"
+        android:text="@string/store_it"
+        android:layout_margin="50dp"
+        android:background="@color/flatui_turquoise"/>
+
+</LinearLayout>

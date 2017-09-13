@@ -1,0 +1,12 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/flatui_wet_asphalt</item>
+        <item name="colorPrimaryDark">@color/flatui_wet_asphalt</item>
+        <item name="colorAccent">@color/flatui_sun_flower</item>
+        <item name="android:windowBackground">@color/flatui_wet_asphalt</item>
+    </style>
+
+</resources>
