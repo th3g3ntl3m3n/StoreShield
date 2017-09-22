@@ -1,24 +1,21 @@
 package th3g3ntl3m3n.storefiles.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
 import th3g3ntl3m3n.storefiles.ImageData.ImageData;
 import th3g3ntl3m3n.storefiles.R;
+import th3g3ntl3m3n.storefiles.UI.ImageViewPager;
 
 /**
  * Created by th3g3ntl3m3n on 31/8/17.
@@ -26,13 +23,16 @@ import th3g3ntl3m3n.storefiles.R;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder>{
 
-    private ArrayList<ImageData> list;
-    Context mcontext;
     private static int overlayColor,transparent;
     private static int toggle = 0;
-    public GalleryAdapter(ArrayList<ImageData> list, Context context) {
+    Context mcontext;
+    private ArrayList<ImageData> list;
+    private FragmentManager fragmentManager;
+
+    public GalleryAdapter(ArrayList<ImageData> list, Context context, FragmentManager fragmentManager) {
         this.list = list;
         mcontext = context;
+        this.fragmentManager = fragmentManager;
         overlayColor = mcontext.getResources().getColor(R.color.overlay);
         transparent = mcontext.getResources().getColor(android.R.color.transparent);
     }
@@ -48,6 +48,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
         Glide.with(mcontext)
                 .load(list.get(holder.getAdapterPosition()).getUrl())
                 .into(holder.imageView);
+
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, ImageViewPager.newInstace(list))
+                        .addToBackStack("hello").commit();
+            }
+        });
 
         holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

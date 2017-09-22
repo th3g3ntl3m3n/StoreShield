@@ -1,24 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
 
 
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/galleryView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/galleryView"/>
 
-    <android.support.design.widget.FloatingActionButton
+        android:layout_height="match_parent" />
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/addImages"
-        android:src="@drawable/plus"
-        app:backgroundTint="@color/flatui_green_sea"
         android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"/>
+        android:layout_margin="12dp"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addImages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:src="@drawable/image"
+            app:backgroundTint="@color/flatui_green_sea" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addVideos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:src="@drawable/video"
+            app:backgroundTint="@color/flatui_green_sea" />
+    </LinearLayout>
 
 </FrameLayout>

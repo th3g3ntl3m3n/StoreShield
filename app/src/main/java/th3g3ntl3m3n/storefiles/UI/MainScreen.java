@@ -49,6 +49,7 @@ public class MainScreen extends Fragment {
                     String storedPassword       = Constants.getPassword(getActivity());
                     if(userEnteredPassword.equals(storedPassword)) {
                         Snackbar.make(view, "Matched", Snackbar.LENGTH_SHORT).show();
+
                         getActivity()
                                 .getSupportFragmentManager()
                                 .beginTransaction()
@@ -72,6 +73,7 @@ public class MainScreen extends Fragment {
                                     .getSupportFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.fragment_container, new SecureGallery())
+                                    .addToBackStack("hellow")
                                     .commit();
 
                         } else {
@@ -99,4 +101,5 @@ public class MainScreen extends Fragment {
         });
         return view;
     }
+
 }

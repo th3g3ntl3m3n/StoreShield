@@ -22,6 +22,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.kbeanie.multipicker.api.Picker;
+import com.kbeanie.multipicker.api.VideoPicker;
+import com.kbeanie.multipicker.api.callbacks.VideoPickerCallback;
+import com.kbeanie.multipicker.api.entity.ChosenVideo;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,6 +35,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import th3g3ntl3m3n.storefiles.ImageData.ImageData;
 import th3g3ntl3m3n.storefiles.R;
@@ -46,7 +52,7 @@ public class SecureGallery extends Fragment {
     RecyclerView.Adapter adapter;
     ArrayList<ImageData> bitmatArray;
     private boolean success = true;
-
+    private VideoPicker videoPicker;
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access
      * Framework Documents, as well as the _data field for the MediaStore and
@@ -194,6 +200,8 @@ public class SecureGallery extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.gallery_screen, container, false);
+
+
         bitmatArray = new ArrayList<>();
         RecyclerView recyclerView = view.findViewById(R.id.galleryView);
         recyclerView.setHasFixedSize(true);
@@ -208,7 +216,7 @@ public class SecureGallery extends Fragment {
                 bitmatArray.add(new ImageData(f.getPath(), false));
             }
         }
-        adapter = new GalleryAdapter(bitmatArray, getActivity().getApplicationContext());
+        adapter = new GalleryAdapter(bitmatArray, getActivity(), getActivity().getSupportFragmentManager());
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
@@ -217,12 +225,34 @@ public class SecureGallery extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent.setType("image/*");
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setType("image/* video/*");
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/*", "video/*"});
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
 
+            }
+        });
+
+        view.findViewById(R.id.addVideos).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                videoPicker = new VideoPicker(SecureGallery.this);
+                videoPicker.setVideoPickerCallback(new VideoPickerCallback() {
+                    @Override
+                    public void onVideosChosen(List<ChosenVideo> list) {
+                        Log.d(TAG, "onVideosChosen: " + list.size());
+                    }
+
+                    @Override
+                    public void onError(String s) {
+
+                    }
+                });
+                videoPicker.allowMultiple();
+                videoPicker.shouldGeneratePreviewImages(true);
+                videoPicker.pickVideo();
             }
         });
         return view;
@@ -231,7 +261,13 @@ public class SecureGallery extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Picker.PICK_VIDEO_DEVICE) {
+            videoPicker.submit(data);
+        } else if (requestCode == Picker.PICK_IMAGE_DEVICE) {
+            Log.d(TAG, "onActivityResult: " + "HI");
+        }
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+
             Log.d(TAG, "onActivityResult: " + data.getClipData());
             if (data.getClipData() != null) {
                 ClipData mClipData = data.getClipData();
@@ -318,5 +354,9 @@ public class SecureGallery extends Fragment {
             Log.e("tag", e.getMessage());
         }
 
+    }
+
+    public void onBackPressed() {
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 }
