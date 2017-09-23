@@ -22,9 +22,11 @@ import th3g3ntl3m3n.storefiles.R;
 public class ImageViewPager extends Fragment {
 
     private static ArrayList<ImageData> arrayList;
+    private static int position;
 
-    public static Fragment newInstace(ArrayList<ImageData> images) {
+    public static Fragment newInstace(ArrayList<ImageData> images, int p) {
         arrayList = images;
+        position = p;
         return new ImageViewPager();
     }
 
@@ -41,15 +43,10 @@ public class ImageViewPager extends Fragment {
         ViewPager viewPager = view.findViewById(R.id.imageViewPager);
         ImagesPagerAdapter adapter = new ImagesPagerAdapter(getActivity().getSupportFragmentManager());
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(1, true);
-    }
-
-    public void onBackPressed() {
-        getActivity().getSupportFragmentManager().popBackStack();
+        viewPager.setCurrentItem(position - 1);
     }
 
     class ImagesPagerAdapter extends FragmentStatePagerAdapter {
-        private String[] arrayOfTitles = {"Login/Register", "Post Ads", "Browse Ads", "Frequently Asked Questions", "Contact Us", "Terms & Conditions"};
 
         public ImagesPagerAdapter(FragmentManager fm) {
             super(fm);

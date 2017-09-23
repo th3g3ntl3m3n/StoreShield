@@ -28,13 +28,6 @@
             android:src="@drawable/image"
             app:backgroundTint="@color/flatui_green_sea" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/addVideos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:src="@drawable/video"
-            app:backgroundTint="@color/flatui_green_sea" />
     </LinearLayout>
 
 </FrameLayout>

@@ -24,8 +24,6 @@ import android.view.ViewGroup;
 
 import com.kbeanie.multipicker.api.Picker;
 import com.kbeanie.multipicker.api.VideoPicker;
-import com.kbeanie.multipicker.api.callbacks.VideoPickerCallback;
-import com.kbeanie.multipicker.api.entity.ChosenVideo;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,7 +33,6 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import th3g3ntl3m3n.storefiles.ImageData.ImageData;
 import th3g3ntl3m3n.storefiles.R;
@@ -235,26 +232,26 @@ public class SecureGallery extends Fragment {
             }
         });
 
-        view.findViewById(R.id.addVideos).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                videoPicker = new VideoPicker(SecureGallery.this);
-                videoPicker.setVideoPickerCallback(new VideoPickerCallback() {
-                    @Override
-                    public void onVideosChosen(List<ChosenVideo> list) {
-                        Log.d(TAG, "onVideosChosen: " + list.size());
-                    }
-
-                    @Override
-                    public void onError(String s) {
-
-                    }
-                });
-                videoPicker.allowMultiple();
-                videoPicker.shouldGeneratePreviewImages(true);
-                videoPicker.pickVideo();
-            }
-        });
+//        view.findViewById(R.id.addVideos).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                videoPicker = new VideoPicker(SecureGallery.this);
+//                videoPicker.setVideoPickerCallback(new VideoPickerCallback() {
+//                    @Override
+//                    public void onVideosChosen(List<ChosenVideo> list) {
+//                        Log.d(TAG, "onVideosChosen: " + list.size());
+//                    }
+//
+//                    @Override
+//                    public void onError(String s) {
+//
+//                    }
+//                });
+//                videoPicker.allowMultiple();
+//                videoPicker.shouldGeneratePreviewImages(true);
+//                videoPicker.pickVideo();
+//            }
+//        });
         return view;
     }
 

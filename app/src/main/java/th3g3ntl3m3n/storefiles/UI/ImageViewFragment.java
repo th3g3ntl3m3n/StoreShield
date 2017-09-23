@@ -40,7 +40,6 @@ public class ImageViewFragment extends Fragment {
         TextView textView = view.findViewById(R.id.heading);
         ImageView imageView = view.findViewById(R.id.preview_image);
         Glide.with(view).load(uriOfImage).into(imageView);
-        textView.setText(uriOfImage);
     }
 
     public void onBackPressed() {
